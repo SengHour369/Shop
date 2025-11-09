@@ -8,5 +8,5 @@ import java.util.List;
 public class OrderRequestDTO {
     @NotNull(message = "customerId is require")
     private Long  customerId;
-    private List<OrderItemDTO> orderItemDTOList;
+    private List<OrderItemRequestDTO> orderItemDTOList;
 }

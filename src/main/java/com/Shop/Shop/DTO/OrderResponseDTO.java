@@ -8,6 +8,7 @@ import java.util.List;
 public class OrderResponseDTO {
     private  Long Id;
     private  Long  customerId;
+    private  String customerName;
     private  Double totalPrice;
-    private  List<OrderItemDTO> orderItemDTOList;
+    private  List<OrderItemRequestDTO> orderItem;
 }
