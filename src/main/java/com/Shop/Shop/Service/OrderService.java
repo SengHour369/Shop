@@ -1,6 +1,6 @@
 package com.Shop.Shop.Service;
 
-import com.Shop.Shop.DTO.OrderItemRequestDTO;
+
 import com.Shop.Shop.DTO.OrderRequestDTO;
 import com.Shop.Shop.DTO.OrderResponseDTO;
 import com.Shop.Shop.DTO.OrderitemResponseDTO;
@@ -10,10 +10,12 @@ import com.Shop.Shop.Model.Entity.ItemOrder;
 import com.Shop.Shop.Model.Entity.Order;
 import com.Shop.Shop.Model.Entity.Product;
 import com.Shop.Shop.Repository.CustomerRepository;
+import com.Shop.Shop.Repository.ItemOrderRepository;
 import com.Shop.Shop.Repository.OrderRepository;
 import com.Shop.Shop.Repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,15 +28,18 @@ public class OrderService implements OrderServiceTemp {
  private final OrderRepository orderRepository;
  private final CustomerRepository customerRepository;
  private final ProductRepository productRepository;
-
     @Override
-    public OrderResponseDTO findOrderById(Long id) {
-        return null;
-    }
+    public List<OrderResponseDTO> findOrderByAll(Long id) {
+        if(id == null){
+            return orderRepository.findAll()
+                    .stream()
+                    .map(this::mapperToDTO
+                    ).collect(Collectors.toList());
+        }
+        return orderRepository.findByCustomer_Id(id).
+                stream().map(this::mapperToDTO)
+                .collect(Collectors.toList());
 
-    @Override
-    public List<OrderResponseDTO> findOrderByAll() {
-        return List.of();
     }
 
     @Override
@@ -84,13 +89,22 @@ public class OrderService implements OrderServiceTemp {
     }
 
     @Override
-    public OrderResponseDTO UpdateOrder(Long id, OrderRequestDTO orderRequestDTO) {
+    public OrderResponseDTO UpdateOrder(Long id, OrderRequestDTO orderRequestDTO) throws ExceptionHandlerNotFound {
+        var customer = customerRepository.findById(orderRequestDTO.getCustomerId())
+                .orElseThrow(()-> new ExceptionHandlerNotFound("customer not found"));
+        var order = orderRepository.findById(id)
+                .orElseThrow(()-> new ExceptionHandlerNotFound("order not found"));
+        order.setCustomer(customer);
+
         return null;
     }
 
     @Override
-    public OrderResponseDTO DeleteOrder(Long id) {
-        return null;
+    public OrderResponseDTO DeleteOrder(Long id) throws ExceptionHandlerNotFound {
+        var order = orderRepository.findById(id)
+                .orElseThrow(()-> new ExceptionHandlerNotFound("order not found"));
+        orderRepository.delete(order);
+        return null ;
     }
     private OrderResponseDTO mapperToDTO(Order order) {
         List<OrderitemResponseDTO> itemOrders = order.getItemOrders()
