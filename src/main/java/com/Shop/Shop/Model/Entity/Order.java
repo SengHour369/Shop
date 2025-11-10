@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "orders")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
@@ -21,7 +22,7 @@ public class Order {
     @Column(name = "totalPrice")
     @NotNull(message = "Price name is required")
     private Double totalPrice;
-    @NotEmpty(message = "customer name is required")
+    @NotNull(message = "customer name is required")
     @ManyToOne
     @JoinColumn(name = "Customer_id",nullable = false)
     private Customer customer;

@@ -4,9 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
+import org.hibernate.engine.internal.Cascade;
+
+import java.util.List;
 
 @Entity
-@Table(name = "Product")
+@Table(name = "product")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,6 +28,7 @@ public class Product {
     @NotNull(message = "quantity name is required")
     private Integer quantity;
     @ManyToOne
-    @JoinColumn(name = "Category_id",nullable = false,unique = true)
+    @JoinColumn(name = "Category_id",nullable = false)
     private Category category;
+
 }
