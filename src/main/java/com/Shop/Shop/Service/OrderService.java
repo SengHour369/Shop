@@ -77,7 +77,6 @@ public class OrderService implements OrderServiceTemp {
                         }
                 ).collect(Collectors.toList());
             order.setItemOrders(orderitem);
-            order.setCustomer(customer);
             Double totalPrice =orderitem.stream()
                     .mapToDouble(ItemOrder::getSubprice)
                     .sum();

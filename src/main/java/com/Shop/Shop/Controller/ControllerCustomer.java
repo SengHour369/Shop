@@ -28,12 +28,8 @@ public class ControllerCustomer {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerResponseDTO>> FindAllCustomers() throws ExceptionHandlerNotFound {
-        return ResponseEntity.ok(customerService.findAll());
-    }
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> FindCustomerById(@PathVariable Long id ) throws ExceptionHandlerNotFound {
-        return ResponseEntity.ok(customerService.findCustomerById(id));
+    public ResponseEntity<List<CustomerResponseDTO>> FindAllCustomers(@RequestParam(required = false) Long id) throws ExceptionHandlerNotFound {
+        return ResponseEntity.ok(customerService.findAll(id));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> DeteleCustomerById(@PathVariable Long id) throws ExceptionHandlerNotFound {

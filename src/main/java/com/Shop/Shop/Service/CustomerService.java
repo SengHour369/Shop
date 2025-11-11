@@ -18,19 +18,21 @@ public class CustomerService implements CustomerServiceTemp {
     private final CustomerRepository customerRepository;
     private final ModelMapper  modelMapper;
     @Override
-    public List<CustomerResponseDTO> findAll() {
-        return customerRepository.findAll()
-                .stream()
-                .map(customer-> modelMapper
-                        .map(customer, CustomerResponseDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public CustomerResponseDTO findCustomerById(Long id) throws ExceptionHandlerNotFound {
-        var customer = customerRepository.findById(id)
-                .orElseThrow(()->new ExceptionHandlerNotFound("customer not found"));
-        return modelMapper.map(customer, CustomerResponseDTO.class);
+    public List<CustomerResponseDTO> findAll(Long id) {
+        if (id == null) {
+            return this.customerRepository.findByAllOrderByNameAsc()
+                    .stream()
+                    .map(customer -> modelMapper
+                            .map(customer, CustomerResponseDTO.class))
+                    .collect(Collectors.toList());
+        }
+        else{
+            return this.customerRepository.findByCustomer_Id(id)
+                    .stream()
+                    .map(customer -> modelMapper
+                            .map(customer, CustomerResponseDTO.class))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
