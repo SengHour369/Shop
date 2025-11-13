@@ -10,12 +10,11 @@ import com.Shop.Shop.Model.Entity.ItemOrder;
 import com.Shop.Shop.Model.Entity.Order;
 import com.Shop.Shop.Model.Entity.Product;
 import com.Shop.Shop.Repository.CustomerRepository;
-import com.Shop.Shop.Repository.ItemOrderRepository;
 import com.Shop.Shop.Repository.OrderRepository;
 import com.Shop.Shop.Repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -94,6 +93,7 @@ public class OrderService implements OrderServiceTemp {
         var order = orderRepository.findById(id)
                 .orElseThrow(()-> new ExceptionHandlerNotFound("order not found"));
         order.setCustomer(customer);
+
 
         return null;
     }
