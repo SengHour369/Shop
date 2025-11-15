@@ -6,6 +6,7 @@ import com.Shop.Shop.Exception.ExceptionHandlerNotFound;
 import com.Shop.Shop.Service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,18 +19,24 @@ public class ControllerCustomer {
     private final CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<CustomerResponseDTO> saveCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO) throws ExceptionHandlerNotFound {
+    public ResponseEntity<CustomerResponseDTO> saveCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO)
+            throws ExceptionHandlerNotFound {
         return ResponseEntity.ok(customerService.CreateCustomer(customerRequestDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> UpdateCustomer(@RequestBody CustomerRequestDTO customerRequestDTO, @PathVariable Long id) throws ExceptionHandlerNotFound {
+    public ResponseEntity<CustomerResponseDTO> UpdateCustomer(@RequestBody CustomerRequestDTO customerRequestDTO,
+                                                              @PathVariable Long id)
+            throws ExceptionHandlerNotFound {
         return ResponseEntity.ok(customerService.UpdateCustomer(id, customerRequestDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerResponseDTO>> FindAllCustomers(@RequestParam(required = false) Long id) throws ExceptionHandlerNotFound {
-        return ResponseEntity.ok(customerService.findAll(id));
+    public List<CustomerResponseDTO> FindAllCustomers(@RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "5") int size,
+                                                      @RequestParam(required = false)String name
+    ) {
+        return customerService.findAll(page,size,name);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> DeteleCustomerById(@PathVariable Long id) throws ExceptionHandlerNotFound {

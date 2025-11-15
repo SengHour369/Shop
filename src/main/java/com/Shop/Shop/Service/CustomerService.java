@@ -7,6 +7,9 @@ import com.Shop.Shop.Model.Entity.Customer;
 import com.Shop.Shop.Repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,22 +21,26 @@ public class CustomerService implements CustomerServiceTemp {
     private final CustomerRepository customerRepository;
     private final ModelMapper  modelMapper;
     @Override
-    public List<CustomerResponseDTO> findAll(Long id) {
-        if (id == null) {
-            return this.customerRepository.findByAllOrderByNameAsc()
+
+    public List<CustomerResponseDTO> findAll(int page, int size,String name) {
+        if  (!(page < 0) || name.isBlank()) {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Customer> customerPage = customerRepository.findAllCustomerByusernameContainingIgnoreCase(pageable,name);
+            return  customerPage.getContent()
                     .stream()
-                    .map(customer -> modelMapper
-                            .map(customer, CustomerResponseDTO.class))
+                    .map(customer -> modelMapper.map(customer, CustomerResponseDTO.class))
                     .collect(Collectors.toList());
         }
-        else{
-            return this.customerRepository.findByCustomer_Id(id)
+        else {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Customer> customerPage = customerRepository.findAllCustomerByusernameContainingIgnoreCase(pageable,"");
+            return customerPage.getContent()
                     .stream()
-                    .map(customer -> modelMapper
-                            .map(customer, CustomerResponseDTO.class))
+                    .map(customer -> modelMapper.map(customer, CustomerResponseDTO.class))
                     .collect(Collectors.toList());
-        }
+         }
     }
+
 
     @Override
     public CustomerResponseDTO CreateCustomer(CustomerRequestDTO customerRequestDTO) throws ExceptionHandlerNotFound {
