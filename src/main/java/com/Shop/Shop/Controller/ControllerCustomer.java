@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,10 +33,14 @@ public class ControllerCustomer {
     }
 
     @GetMapping
-    public List<CustomerResponseDTO> FindAllCustomers(@RequestParam(defaultValue = "0") int page,
+    public Page<CustomerResponseDTO> FindAllCustomers(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "5") int size,
-                                                      @RequestParam(required = false)String name
+                                                      @RequestParam(required = false) String name
+
+
+
     ) {
+        
         return customerService.findAll(page,size,name);
     }
     @DeleteMapping("/{id}")

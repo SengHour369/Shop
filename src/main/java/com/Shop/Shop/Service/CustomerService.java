@@ -10,10 +10,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,22 +23,22 @@ public class CustomerService implements CustomerServiceTemp {
     private final ModelMapper  modelMapper;
     @Override
 
-    public List<CustomerResponseDTO> findAll(int page, int size,String name) {
-        if  (!(page < 0) || name.isBlank()) {
-            Pageable pageable = PageRequest.of(page, size);
+    public Page<CustomerResponseDTO> findAll(int page, int size,String name) {
+        if (page < 0) {
+            throw new IllegalArgumentException("Page must be >= 0");
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").descending());
+
+
+
+        if  (name != null) {
             Page<Customer> customerPage = customerRepository.findAllCustomerByusernameContainingIgnoreCase(pageable,name);
-            return  customerPage.getContent()
-                    .stream()
-                    .map(customer -> modelMapper.map(customer, CustomerResponseDTO.class))
-                    .collect(Collectors.toList());
+            return  customerPage.map(customer->modelMapper.map(customer,CustomerResponseDTO.class));
         }
         else {
-            Pageable pageable = PageRequest.of(page, size);
             Page<Customer> customerPage = customerRepository.findAllCustomerByusernameContainingIgnoreCase(pageable,"");
-            return customerPage.getContent()
-                    .stream()
-                    .map(customer -> modelMapper.map(customer, CustomerResponseDTO.class))
-                    .collect(Collectors.toList());
+            return customerPage
+                    .map( customer->modelMapper.map(customer,CustomerResponseDTO.class));
          }
     }
 
@@ -53,7 +54,8 @@ public class CustomerService implements CustomerServiceTemp {
     }
 
     @Override
-    public CustomerResponseDTO UpdateCustomer(Long id, CustomerRequestDTO customerRequestDTO) throws ExceptionHandlerNotFound {
+    public CustomerResponseDTO UpdateCustomer(Long id, CustomerRequestDTO customerRequestDTO)
+            throws ExceptionHandlerNotFound {
         var customer = customerRepository.findById(id)
                 .orElseThrow(()->new ExceptionHandlerNotFound("customer not found"));
         customer.setUsername(customerRequestDTO.getUsername());

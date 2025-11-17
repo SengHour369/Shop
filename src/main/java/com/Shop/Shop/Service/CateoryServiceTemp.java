@@ -9,6 +9,6 @@ public interface CateoryServiceTemp {
     CateoryResponseDTO findCateoryById(Long id) throws ExceptionHandlerNotFound;
     List<CateoryResponseDTO> findCateoryAll();
     CateoryResponseDTO  createCateory(CateoryRequestDTO cateoryRequestDTO);
-    CateoryResponseDTO   updateCateory(Long id,CateoryRequestDTO cateoryRequestDTO);
-    CateoryResponseDTO  deleteCateoryById(Long id) throws ExceptionHandlerNotFound;
+    CateoryResponseDTO   updateCateory(Long id,CateoryRequestDTO cateoryRequestDTO) throws ExceptionHandlerNotFound;
+    void deleteCateoryById(Long id) throws ExceptionHandlerNotFound;
 }

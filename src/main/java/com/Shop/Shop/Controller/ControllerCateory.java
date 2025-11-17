@@ -45,4 +45,9 @@ public class ControllerCateory {
         cateoryService.deleteCateoryById(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<CateoryResponseDTO> Update(@PathVariable Long id, @RequestBody CateoryRequestDTO cateoryRequestDTO)
+            throws ExceptionHandlerNotFound {
+        return ResponseEntity.ok(cateoryService.updateCateory(id, cateoryRequestDTO));
+    }
 }
