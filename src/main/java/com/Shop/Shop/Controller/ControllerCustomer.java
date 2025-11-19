@@ -35,13 +35,15 @@ public class ControllerCustomer {
     @GetMapping
     public Page<CustomerResponseDTO> FindAllCustomers(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "5") int size,
-                                                      @RequestParam(required = false) String name
+                                                      @RequestParam(required = false) String name,
+                                                      @RequestParam(required = false,defaultValue = "username:desc")String sort,
+                                                      @RequestParam(required = false,defaultValue = "false") String ipage
 
 
 
     ) {
-        
-        return customerService.findAll(page,size,name);
+
+        return customerService.findAll(page,size,name,sort,Objects.equals(ipage,"true"));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> DeteleCustomerById(@PathVariable Long id) throws ExceptionHandlerNotFound {

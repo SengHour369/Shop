@@ -28,7 +28,7 @@ public class Customer {
     private String username;
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Order> order;
